@@ -29,7 +29,6 @@ La institución educativa para la que presentaste una primera propuesta de admin
 - Buenas prácticas, clean code
 - HTML semántico
 - Validaciones en los campos del formulario
-
 ​
 ### Extras:
 - Que se puedan eliminar registros
@@ -38,7 +37,6 @@ La institución educativa para la que presentaste una primera propuesta de admin
 - Animaciones JS / CSS
 - Mensajes con Sweet Alert 2 (advertencia, información, error, etc)
 
-​
 ### Tecnologías
 - HTML
 - CSS
