@@ -1,0 +1,28 @@
+{
+  "Usuario": [
+    {
+      "id": "a27a",
+      "nombre": "Carito",
+      "apellido1": "vasquez",
+      "apellido2": "castro",
+      "email": "42carovasq@gmail.com",
+      "telefono": "642363380"
+    },
+    {
+      "id": "c314",
+      "nombre": "asd",
+      "apellido1": "asd",
+      "apellido2": "asd",
+      "email": "asd@gmail.com",
+      "telefono": "123123123"
+    },
+    {
+      "id": "3642",
+      "nombre": "asd",
+      "apellido1": "asd",
+      "apellido2": "asd",
+      "email": "qwe@gmail.com",
+      "telefono": "2121213232"
+    }
+  ]
+}
