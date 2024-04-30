@@ -54,7 +54,7 @@ Este proyecto está en producción (beta).
 ## Acceso al Proyecto
 Sigue estos pasos:
 
-1. git clone https://github.com/carovasq/administrador-lista-ii
+1. git clone https://github.com/carovasq/administrador-lista-ii.git
 
 2. Navega hasta el directorio del proyecto: cd administrador-lista-ii
 
