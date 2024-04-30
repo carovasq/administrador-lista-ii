@@ -1,5 +1,5 @@
 # Proyecto 3: App para Administrar Lista
-
+![demo](https://github.com/carovasq/List_manager/assets/151535611/8ae142db-e3ba-49bb-ad4c-efbcdf81bdc6)
 
 ## Descripción
 Crear una aplicación frontend para administrar listas de usuarios asociados a un evento con una solución de almacenamiento de datos.
