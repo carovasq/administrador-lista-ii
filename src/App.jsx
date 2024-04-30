@@ -1,15 +1,80 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css/animate.min.css";
 import Container from "react-bootstrap/Container";
 import { Form, Button, Table } from "react-bootstrap";
-import userData from "../db.json";
 import Swal from "sweetalert2";
 
-
 function App() {
-  const [usuarios, setUsuarios] = useState(userData.Usuario);
+  const [usuarios, setUsuarios] = useState([]);
+
+  useEffect(() => {
+    getUsuarios();
+  }, []);
+
+  const getUsuarios = () => {
+    fetch("http://localhost:3000/Usuario")
+      .then((response) => response.json())
+      .then((data) => setUsuarios(data))
+      .catch((error) => console.error("Error fetching usuarios:", error));
+  };
+
+  const addUsuario = async (usuario) => {
+    try {
+      const response = await fetch("http://localhost:3000/Usuario", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(usuario),
+      });
+      const data = await response.json();
+      setUsuarios([...usuarios, data]);
+      await showSuccessMessage("Usuario creado correctamente");
+    } catch (error) {
+      console.error("Error adding usuario:", error);
+    }
+  };
+
+  const updateUsuario = async (usuario) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/Usuario/${usuario.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(usuario),
+        }
+      );
+      await response.json();
+      const updatedUsuarios = usuarios.map((u) =>
+        u.id === usuario.id ? usuario : u
+      );
+      setUsuarios(updatedUsuarios);
+      setEditingUser(null);
+      await showSuccessMessage("Usuario actualizado correctamente");
+    } catch (error) {
+      console.error("Error updating usuario:", error);
+    }
+  };
+
+  const deleteUsuario = async (id) => {
+    try {
+      await fetch(`http://localhost:3000/Usuario/${id}`, {
+        method: "DELETE",
+      });
+      const updatedUsuarios = usuarios.filter((usuario) => usuario.id !== id);
+      setUsuarios(updatedUsuarios);
+      setEditingUser(null);
+      await showSuccessMessage("Usuario eliminado correctamente");
+    } catch (error) {
+      console.error("Error deleting usuario:", error);
+    }
+  };
+
   const [formData, setFormData] = useState({
     nombre: "",
     apellido1: "",
@@ -18,7 +83,6 @@ function App() {
     telefono: "",
   });
   const [editingUser, setEditingUser] = useState(null);
-
 
   useEffect(() => {
     if (editingUser) {
@@ -34,7 +98,6 @@ function App() {
     }
   }, [editingUser]);
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -43,23 +106,16 @@ function App() {
     }));
   };
 
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!editingUser) {
       const newUsuario = {
         id: Math.random().toString(36).substr(2, 9),
         ...formData,
       };
-      setUsuarios([...usuarios, newUsuario]);
-      showSuccessMessage("Usuario creado correctamente");
+      await addUsuario(newUsuario);
     } else {
-      const updatedUsuarios = usuarios.map((usuario) =>
-        usuario.id === editingUser.id ? { ...usuario, ...formData } : usuario
-      );
-      setUsuarios(updatedUsuarios);
-      setEditingUser(null);
-      showSuccessMessage("Usuario actualizado correctamente");
+      await updateUsuario(formData);
     }
     setFormData({
       nombre: "",
@@ -70,28 +126,21 @@ function App() {
     });
   };
 
-
   const handleEdit = (user) => {
     setEditingUser(user);
   };
 
-
-  const handleDelete = (id) => {
-    const updatedUsuarios = usuarios.filter((usuario) => usuario.id !== id);
-    setUsuarios(updatedUsuarios);
-    setEditingUser(null);
-    showSuccessMessage("Usuario eliminado correctamente");
+  const handleDelete = async (id) => {
+    await deleteUsuario(id);
   };
 
-  
-  const showSuccessMessage = (message) => {
-    Swal.fire({
+  const showSuccessMessage = async (message) => {
+    await Swal.fire({
       icon: "success",
       title: "¡Éxito!",
       text: message,
     });
   };
-
 
   return (
     <Container>
@@ -160,7 +209,7 @@ function App() {
         <Button
           variant="primary"
           type="submit"
-          className="btn btn-primary animate__animated animate__heartBeat animate__infinite	infinite"
+          className="btn btn-primary animate__animated animate__heartBeat animate__infinite infinite"
         >
           {editingUser ? "Actualizar" : "Crear"}
         </Button>
@@ -186,14 +235,14 @@ function App() {
               <td>{usuario.telefono}</td>
               <td className="d-flex">
                 <Button
-                  className="animate__animated animate__pulse animate__infinite	infinite animate__slow	2s"
+                  className="animate__animated animate__pulse animate__infinite infinite animate__slow	2s"
                   variant="info"
                   onClick={() => handleEdit(usuario)}
                 >
                   Editar
                 </Button>{" "}
                 <Button
-                  className="animate__animated animate__flash animate__infinite	infinite animate__slower	3s"
+                  className="animate__animated animate__flash animate__infinite infinite animate__slower	3s"
                   variant="danger"
                   onClick={() => handleDelete(usuario.id)}
                 >
